@@ -74,4 +74,12 @@ function add_redirect_hosts( $hosts ) {
     }
 
     return array_merge( $hosts );
-};
+}
+
+
+function optional_login_redirect( $redirect_to, $request, $user ) {
+    // if header X-Forwarded-Host and HTTP_X_FORWARDED_HOST is set use for redirect
+    $redirect_to = isset($_SERVER['X-Forwarded-Host']) ? $_SERVER['X-Forwarded-Host'] : isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $redirect_to;
+
+    return $redirect_to . '/wp-admin/';
+}
