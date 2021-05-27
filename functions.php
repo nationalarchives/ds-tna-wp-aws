@@ -100,3 +100,11 @@ function optional_login_redirect( $redirect_to, $request, $user ) {
 
     return $redirect_to . '/wp-admin/';
 }
+
+function forwarded_site_url( $url ){
+    if( isset($_SERVER['HTTP_X_FORWARDED_HOST']) ) {
+        return 'https://'.$_SERVER['HTTP_X_FORWARDED_HOST'];
+    }
+
+    return $url;
+}
