@@ -49,6 +49,23 @@ function tna_aws_admin_page() {
         <h1>AWS admin</h1>
         <hr>
         <p>Your IP address: <strong><?php echo tna_aws_get_client_ip() ?></strong></p>
+        <p>Forwarded host URL (HTTP_X_FORWARDED_HOST):
+            <?php if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+                echo $_SERVER['HTTP_X_FORWARDED_HOST'];
+            } else {
+                echo 'null';
+            }
+            ?>
+        </p>
+        <p>Forwarded host URL (X-Forwarded-Host):
+            <?php if (isset($_SERVER['X-Forwarded-Host'])) {
+                echo $_SERVER['X-Forwarded-Host'];
+            } else {
+                echo 'null';
+            }
+            ?>
+        </p>
+        <p>Site URL: <?php echo site_url() ?></p>
         <hr>
         <h2>Search engine bots</h2>
         <h3>robots.txt</h3>
