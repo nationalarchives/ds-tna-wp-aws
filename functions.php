@@ -51,7 +51,7 @@ function tna_aws_admin_page() {
         <p>Your IP address: <strong><?php echo tna_aws_get_client_ip() ?></strong></p>
         <p>Forwarded host URL (HTTP_X_FORWARDED_HOST):
             <?php if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
-                echo $_SERVER['HTTP_X_FORWARDED_HOST'];
+                echo str_replace('.', '-', $_SERVER['HTTP_X_FORWARDED_HOST']);
             } else {
                 echo 'null';
             }
@@ -59,13 +59,14 @@ function tna_aws_admin_page() {
         </p>
         <p>Forwarded host URL (X-Forwarded-Host):
             <?php if (isset($_SERVER['X-Forwarded-Host'])) {
-                echo $_SERVER['X-Forwarded-Host'];
+                echo str_replace('.', '-', $_SERVER['X-Forwarded-Host']);
             } else {
                 echo 'null';
             }
             ?>
         </p>
-        <p>Site URL: <?php echo site_url() ?></p>
+        <p>Site URL: <?php echo str_replace('.', '-', site_url()) ?></p>
+        <p>Admin URL: <?php echo str_replace('.', '-', admin_url()) ?></p>
         <hr>
         <h2>Search engine bots</h2>
         <h3>robots.txt</h3>
@@ -101,9 +102,17 @@ function optional_login_redirect( $redirect_to, $request, $user ) {
     return $redirect_to . '/wp-admin/';
 }
 
-function forwarded_site_url( $url ){
+function forwarded_admin_url( $url, $path ) {
     if( isset($_SERVER['HTTP_X_FORWARDED_HOST']) ) {
-        return 'https://'.$_SERVER['HTTP_X_FORWARDED_HOST'];
+        $url = 'https://'.$_SERVER['HTTP_X_FORWARDED_HOST'].'/wp-admin/'.$path;
+    }
+
+    return $url;
+}
+
+function forwarded_site_url( $url, $path ) {
+    if( isset($_SERVER['HTTP_X_FORWARDED_HOST']) ) {
+        $url = 'https://'.$_SERVER['HTTP_X_FORWARDED_HOST'].'/'.$path;
     }
 
     return $url;
