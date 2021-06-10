@@ -17,6 +17,7 @@ add_action( 'admin_init', 'tna_aws_admin_page_settings' );
 add_action( 'admin_menu', 'tna_aws_add_menu_item' );
 
 /* add_filter */
-add_filter('allowed_redirect_hosts', 'add_redirect_hosts', 10);
-add_filter( 'admin_url', 'forwarded_admin_url', 10, 2 );
-add_filter( 'site_url', 'forwarded_site_url', 10, 2 );
+add_filter( 'show_admin_bar', '__return_false' );
+add_filter( 'allowed_redirect_hosts', 'add_redirect_hosts', 10 );
+add_filter( 'option_siteurl', 'forwarded_site_url', 10, 1 );
+add_filter( 'option_home', 'forwarded_site_url', 10, 1 );
