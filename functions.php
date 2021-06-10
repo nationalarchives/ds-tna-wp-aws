@@ -1,5 +1,32 @@
 <?php
 
+function add_redirect_hosts( $hosts ) {
+    // read header X-Forwarded-Host and HTTP_X_FORWARDED_HOST
+    $add_host = isset($_SERVER['X-Forwarded-Host']) ? $_SERVER['X-Forwarded-Host'] : isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : '';
+    if (! empty($add_host)) {
+        $hosts[] = $add_host;
+    }
+
+    return array_merge( $hosts );
+}
+
+function forwarded_site_url( $url ) {
+    if( isset($_SERVER['HTTP_X_FORWARDED_HOST']) && defined('EDITOR_SITEURL') && defined('INT_SITEURL') ) {
+        $url = str_replace( INT_SITEURL, EDITOR_SITEURL, $url );
+    }
+
+    return $url;
+}
+
+function forwarded_attachments_url($url) {
+    if( isset($_SERVER['HTTP_X_FORWARDED_HOST']) && defined('EDITOR_SITEURL') && defined('INT_SITEURL') ) {
+        $url = str_replace( 'http:', 'https:', $url );
+        $url = str_replace( INT_SITEURL, EDITOR_SITEURL, $url );
+    }
+
+    return $url;
+}
+
 function tna_aws_get_client_ip() {
     //whether ip is from share internet
     if (!empty($_SERVER['HTTP_CLIENT_IP']))
@@ -82,38 +109,4 @@ function tna_aws_admin_page() {
         </p>
     </div>
     <?php
-}
-
-function add_redirect_hosts( $hosts ) {
-    // read header X-Forwarded-Host and HTTP_X_FORWARDED_HOST
-    $add_host = isset($_SERVER['X-Forwarded-Host']) ? $_SERVER['X-Forwarded-Host'] : isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : '';
-    if (! empty($add_host)) {
-        $hosts[] = $add_host;
-    }
-
-    return array_merge( $hosts );
-}
-
-
-function optional_login_redirect( $redirect_to, $request, $user ) {
-    // if header X-Forwarded-Host and HTTP_X_FORWARDED_HOST is set use for redirect
-    $redirect_to = isset($_SERVER['X-Forwarded-Host']) ? $_SERVER['X-Forwarded-Host'] : isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $redirect_to;
-
-    return $redirect_to . '/wp-admin/';
-}
-
-function forwarded_admin_url( $url, $path ) {
-    if( isset($_SERVER['HTTP_X_FORWARDED_HOST']) ) {
-        $url = 'https://'.$_SERVER['HTTP_X_FORWARDED_HOST'].'/wp-admin/'.$path;
-    }
-
-    return $url;
-}
-
-function forwarded_site_url( $url, $path ) {
-    if( isset($_SERVER['HTTP_X_FORWARDED_HOST']) ) {
-        $url = 'https://'.$_SERVER['HTTP_X_FORWARDED_HOST'].'/'.$path;
-    }
-
-    return $url;
 }
