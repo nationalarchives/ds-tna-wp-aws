@@ -18,6 +18,15 @@ function forwarded_site_url( $url ) {
     return $url;
 }
 
+function forwarded_attachments_url($url) {
+    if( isset($_SERVER['HTTP_X_FORWARDED_HOST']) && defined('EDITOR_SITEURL') && defined('INT_SITEURL') ) {
+        $url = str_replace( 'http:', 'https:', $url );
+        $url = str_replace( INT_SITEURL, EDITOR_SITEURL, $url );
+    }
+
+    return $url;
+}
+
 function tna_aws_get_client_ip() {
     //whether ip is from share internet
     if (!empty($_SERVER['HTTP_CLIENT_IP']))
