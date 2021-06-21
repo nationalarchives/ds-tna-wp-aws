@@ -11,7 +11,8 @@ function add_redirect_hosts( $hosts ) {
 }
 
 function forwarded_site_url( $url ) {
-    if( isset($_SERVER['HTTP_X_FORWARDED_HOST']) && defined('EDITOR_SITEURL') && defined('INT_SITEURL') ) {
+    $headers = apache_request_headers();
+    if( isset($headers['HTTP_X_FORWARDED_HOST']) && defined('EDITOR_SITEURL') && defined('INT_SITEURL') && isset($headers['X_HOST_TYPE']) && $headers['X_HOST_TYPE'] == 'private' ) {
         $url = str_replace( INT_SITEURL, EDITOR_SITEURL, $url );
     }
 
@@ -19,7 +20,8 @@ function forwarded_site_url( $url ) {
 }
 
 function forwarded_attachments_url($url) {
-    if( isset($_SERVER['HTTP_X_FORWARDED_HOST']) && defined('EDITOR_SITEURL') && defined('INT_SITEURL') ) {
+    $headers = apache_request_headers();
+    if( isset($headers['HTTP_X_FORWARDED_HOST']) && defined('EDITOR_SITEURL') && defined('INT_SITEURL') && isset($headers['X_HOST_TYPE']) && $headers['X_HOST_TYPE'] == 'private' ) {
         $url = str_replace( 'http:', 'https:', $url );
         $url = str_replace( INT_SITEURL, EDITOR_SITEURL, $url );
     }
