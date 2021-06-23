@@ -44,6 +44,21 @@ function public_redirect_url( $redirect_url, $requested_url ) {
     return $redirect_url;
 }
 
+function redirect_url_filter( $url ) {
+    $headers = apache_request_headers();
+    if ( defined('PUBLIC_SITEURL') && isset($headers['X_HOST_TYPE']) && $headers['X_HOST_TYPE'] == 'public' ) {
+        global $pre_path;
+        $path = '/';
+        $home_url = parse_url( home_url() )['host'];
+        if (isset($pre_path)) {
+            $path = $pre_path;
+        }
+        $url = str_replace( $home_url, PUBLIC_SITEURL.$path, $url );
+    }
+
+    return $url;
+}
+
 function tna_aws_get_client_ip() {
     //whether ip is from share internet
     if (!empty($_SERVER['HTTP_CLIENT_IP']))
