@@ -23,6 +23,7 @@ add_filter( 'allowed_redirect_hosts', 'add_redirect_hosts', 10 );
 add_filter( 'option_siteurl', 'forwarded_site_url', 10, 1 );
 add_filter( 'option_home', 'forwarded_site_url', 10, 1 );
 add_filter( 'wp_get_attachment_url', 'forwarded_attachments_url' );
+add_filter( 'redirect_canonical', 'public_redirect_url', 10, 2 );
 
 // add_filter( 'wp_redirect', 'forwarded_site_public_url', 10, 1 );
 // add_filter('redirect_canonical', 'forwarded_site_public_url', 10, 1);

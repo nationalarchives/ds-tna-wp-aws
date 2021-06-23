@@ -16,15 +16,6 @@ function forwarded_site_url( $url ) {
         $url = str_replace( INT_SITEURL, EDITOR_SITEURL, $url );
     }
 
-    if ( defined('PUBLIC_SITEURL') && isset($headers['X_HOST_TYPE']) && $headers['X_HOST_TYPE'] == 'public' ) {
-        global $pre_path;
-        $path = '/';
-        if (isset($pre_path)) {
-            $path = $pre_path;
-        }
-        $url = str_replace( parse_url( home_url() )['host'], PUBLIC_SITEURL.$path, $url );
-    }
-
     return $url;
 }
 
@@ -38,14 +29,19 @@ function forwarded_attachments_url($url) {
     return $url;
 }
 
-function forwarded_site_public_url( $url ) {
+function public_redirect_url( $redirect_url, $requested_url ) {
     $headers = apache_request_headers();
-
-    if ( defined('PUBLIC_SITEURL') && defined('INT_SITEURL') && isset($headers['X_HOST_TYPE']) && $headers['X_HOST_TYPE'] == 'public' ) {
-        $url = str_replace( INT_SITEURL, PUBLIC_SITEURL, $url );
+    if ( defined('PUBLIC_SITEURL') && isset($headers['X_HOST_TYPE']) && $headers['X_HOST_TYPE'] == 'public' ) {
+        global $pre_path;
+        $path = '/';
+        $home_url = parse_url( home_url() )['host'];
+        if (isset($pre_path)) {
+            $path = $pre_path;
+        }
+        $redirect_url = str_replace( $home_url, PUBLIC_SITEURL.$path, $redirect_url );
     }
 
-    return $url;
+    return $redirect_url;
 }
 
 function tna_aws_get_client_ip() {
@@ -156,4 +152,3 @@ function aws_meta() {
     Path: '.$pre_path.'
     -->';
 }
-
