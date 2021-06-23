@@ -16,6 +16,15 @@ function forwarded_site_url( $url ) {
         $url = str_replace( INT_SITEURL, EDITOR_SITEURL, $url );
     }
 
+    if ( defined('PUBLIC_SITEURL') && isset($headers['X_HOST_TYPE']) && $headers['X_HOST_TYPE'] == 'public' ) {
+        global $pre_path;
+        $path = '/';
+        if (isset($pre_path)) {
+            $path = $pre_path;
+        }
+        $url = str_replace( parse_url( home_url() )['host'], PUBLIC_SITEURL.$path, $url );
+    }
+
     return $url;
 }
 
@@ -24,6 +33,16 @@ function forwarded_attachments_url($url) {
     if( isset($headers['HTTP_X_FORWARDED_HOST']) && defined('EDITOR_SITEURL') && defined('INT_SITEURL') && isset($headers['X_HOST_TYPE']) && $headers['X_HOST_TYPE'] == 'private' ) {
         $url = str_replace( 'http:', 'https:', $url );
         $url = str_replace( INT_SITEURL, EDITOR_SITEURL, $url );
+    }
+
+    return $url;
+}
+
+function forwarded_site_public_url( $url ) {
+    $headers = apache_request_headers();
+
+    if ( defined('PUBLIC_SITEURL') && defined('INT_SITEURL') && isset($headers['X_HOST_TYPE']) && $headers['X_HOST_TYPE'] == 'public' ) {
+        $url = str_replace( INT_SITEURL, PUBLIC_SITEURL, $url );
     }
 
     return $url;
@@ -78,6 +97,14 @@ function tna_aws_admin_page() {
         <h1>AWS admin</h1>
         <hr>
         <p>Your IP address: <strong><?php echo tna_aws_get_client_ip() ?></strong></p>
+        <p>Ec2 Instance IP address:
+            <?php if (isset($_SERVER['SERVER_ADDR'])) {
+                echo $_SERVER['SERVER_ADDR'];
+            } else {
+                echo 'null';
+            }
+            ?>
+        </p>
         <p>Forwarded host URL (HTTP_X_FORWARDED_HOST):
             <?php if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
                 echo str_replace('.', '-', $_SERVER['HTTP_X_FORWARDED_HOST']);
@@ -95,6 +122,9 @@ function tna_aws_admin_page() {
             ?>
         </p>
         <p>Site URL: <?php echo str_replace('.', '-', site_url()) ?></p>
+        <p>Home URL: <?php echo str_replace('.', '-', home_url()) ?></p>
+        <p>Parse Home URL: <?php echo str_replace('.', '-', parse_url( home_url() )['host']) ?></p>
+        <p>Get Option Home URL: <?php echo str_replace('.', '-', get_option('home')) ?></p>
         <p>Admin URL: <?php echo str_replace('.', '-', admin_url()) ?></p>
         <hr>
         <h2>Search engine bots</h2>
@@ -112,3 +142,18 @@ function tna_aws_admin_page() {
     </div>
     <?php
 }
+
+function aws_meta() {
+    global $pre_path;
+    echo '<!-- 
+    Public URL: '.PUBLIC_SITEURL.'
+    Private URL: '.EDITOR_SITEURL.'
+    Internal URL: '.INT_SITEURL.'
+    Site URL: '.str_replace('.', '-', site_url()).'
+    Home URL: '.str_replace('.', '-', home_url()).'
+    Parse Home URL: '.str_replace('.', '-', parse_url( home_url() )['host']).'
+    Get Option Home URL: '.str_replace('.', '-', get_option('home')).'
+    Path: '.$pre_path.'
+    -->';
+}
+
