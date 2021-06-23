@@ -11,19 +11,23 @@ function add_redirect_hosts( $hosts ) {
 }
 
 function forwarded_site_url( $url ) {
-    $headers = apache_request_headers();
-    if( isset($headers['HTTP_X_FORWARDED_HOST']) && defined('EDITOR_SITEURL') && defined('INT_SITEURL') && isset($headers['X_HOST_TYPE']) && $headers['X_HOST_TYPE'] == 'private' ) {
-        $url = str_replace( INT_SITEURL, EDITOR_SITEURL, $url );
+    if (is_admin() || $GLOBALS['pagenow'] === 'wp-login.php') {
+        $headers = apache_request_headers();
+        if (isset($headers['HTTP_X_FORWARDED_HOST']) && defined('EDITOR_SITEURL') && defined('INT_SITEURL') && isset($headers['X_HOST_TYPE']) && $headers['X_HOST_TYPE'] == 'private') {
+            $url = str_replace(INT_SITEURL, EDITOR_SITEURL, $url);
+        }
     }
 
     return $url;
 }
 
 function forwarded_attachments_url($url) {
-    $headers = apache_request_headers();
-    if( isset($headers['HTTP_X_FORWARDED_HOST']) && defined('EDITOR_SITEURL') && defined('INT_SITEURL') && isset($headers['X_HOST_TYPE']) && $headers['X_HOST_TYPE'] == 'private' ) {
-        $url = str_replace( 'http:', 'https:', $url );
-        $url = str_replace( INT_SITEURL, EDITOR_SITEURL, $url );
+    if (is_admin()) {
+        $headers = apache_request_headers();
+        if( isset($headers['HTTP_X_FORWARDED_HOST']) && defined('EDITOR_SITEURL') && defined('INT_SITEURL') && isset($headers['X_HOST_TYPE']) && $headers['X_HOST_TYPE'] == 'private' ) {
+            $url = str_replace( 'http:', 'https:', $url );
+            $url = str_replace( INT_SITEURL, EDITOR_SITEURL, $url );
+        }
     }
 
     return $url;
