@@ -11,6 +11,7 @@ function add_redirect_hosts( $hosts ) {
 }
 
 function forwarded_site_url( $url ) {
+    var_dump($url);die();
     // if (is_admin() || $GLOBALS['pagenow'] === 'wp-login.php') {
         $headers = apache_request_headers();
         if ( defined('EDITOR_SITEURL') && defined('INT_SITEURL') && isset($headers['X_HOST_TYPE']) && $headers['X_HOST_TYPE'] == 'private' ) {
