@@ -11,7 +11,6 @@ function add_redirect_hosts( $hosts ) {
 }
 
 function forwarded_site_url( $url ) {
-    // var_dump($url);die();
     if (is_admin() || $GLOBALS['pagenow'] === 'wp-login.php') {
         $headers = apache_request_headers();
         if ( defined('EDITOR_SITEURL') && defined('INT_SITEURL') && isset($headers['X_HOST_TYPE']) && $headers['X_HOST_TYPE'] == 'private' ) {
@@ -33,21 +32,6 @@ function forwarded_attachments_url($url) {
     }
 
     return $url;
-}
-
-function public_redirect_url( $redirect_url, $requested_url ) {
-    $headers = apache_request_headers();
-    if ( defined('PUBLIC_SITEURL') && isset($headers['X_HOST_TYPE']) && $headers['X_HOST_TYPE'] == 'public' ) {
-        global $pre_path;
-        $path = '/';
-        $home_url = parse_url( home_url() )['host'];
-        if (isset($pre_path)) {
-            $path = $pre_path;
-        }
-        $redirect_url = str_replace( $home_url, PUBLIC_SITEURL.$path, $redirect_url );
-    }
-
-    return $redirect_url;
 }
 
 function redirect_url_filter( $url ) {
@@ -161,15 +145,19 @@ function tna_aws_admin_page() {
 }
 
 function aws_meta() {
-    global $pre_path;
-    echo '<!-- 
-    Public URL: '.PUBLIC_SITEURL.'
-    Private URL: '.EDITOR_SITEURL.'
-    Internal URL: '.INT_SITEURL.'
-    Site URL: '.str_replace('.', '-', site_url()).'
-    Home URL: '.str_replace('.', '-', home_url()).'
-    Parse Home URL: '.str_replace('.', '-', parse_url( home_url() )['host']).'
-    Get Option Home URL: '.str_replace('.', '-', get_option('home')).'
-    Path: '.$pre_path.'
-    -->';
+    $headers = apache_request_headers();
+    if (isset($headers['X_HOST_TYPE']) && $headers['X_HOST_TYPE'] == 'private' ) {
+        global $pre_path;
+        echo '<!-- For debugging URLs
+Public URL: ' . PUBLIC_SITEURL . '
+Private URL: ' . EDITOR_SITEURL . '
+Internal URL: ' . INT_SITEURL . '
+Site URL: ' . str_replace('.', '-', site_url()) . '
+Home URL: ' . str_replace('.', '-', home_url()) . '
+Parse Home URL: ' . str_replace('.', '-', parse_url(home_url())['host']) . '
+Get Option Home URL: ' . str_replace('.', '-', get_option('home')) . '
+Path: ' . $pre_path . '
+-->
+    ';
+    }
 }
