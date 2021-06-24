@@ -15,6 +15,7 @@ include 'functions.php';
 /* add_action */
 add_action( 'admin_init', 'tna_aws_admin_page_settings' );
 add_action( 'admin_menu', 'tna_aws_add_menu_item' );
+add_action( 'wp_head', 'aws_meta' );
 
 /* add_filter */
 add_filter( 'show_admin_bar', '__return_false' );
