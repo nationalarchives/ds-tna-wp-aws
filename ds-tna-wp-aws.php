@@ -11,7 +11,6 @@
 
 /* Included functions */
 include 'functions.php';
-include 'functions-404.php';
 
 /* add_action */
 add_action( 'admin_init', 'tna_aws_admin_page_settings' );
@@ -24,4 +23,4 @@ add_filter( 'allowed_redirect_hosts', 'add_redirect_hosts', 10 );
 add_filter( 'option_siteurl', 'forwarded_site_url', 10, 1 );
 add_filter( 'option_home', 'forwarded_site_url', 10, 1 );
 add_filter( 'wp_get_attachment_url', 'forwarded_attachments_url' );
-add_filter( 'page_template', 'tna_404_page_template' );
+add_filter( 'status_header', 'no_redirect_guess_404_permalink' );
