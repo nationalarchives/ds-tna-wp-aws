@@ -161,3 +161,13 @@ Path: ' . $pre_path . '
     ';
     }
 }
+
+function no_redirect_guess_404_permalink( $header ){
+    global $wp_query;
+
+    if( is_404() ) {
+        unset( $wp_query->query_vars['name'] );
+    }
+
+    return $header;
+}
