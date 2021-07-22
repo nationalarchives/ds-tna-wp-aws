@@ -35,10 +35,11 @@ function forwarded_attachments_url($url) {
 }
 
 function forwarded_network_domain($network) {
-    if (is_admin()) {
+    if (is_admin() && !is_network_admin()) {
         $headers = apache_request_headers();
         if( defined('EDITOR_SITEURL') && defined('INT_SITEURL') && isset($headers['X_HOST_TYPE']) && $headers['X_HOST_TYPE'] == 'private' ) {
             $network->domain = str_replace( INT_SITEURL, EDITOR_SITEURL, $network->domain);
+            $network->cookie_domain = str_replace( INT_SITEURL, EDITOR_SITEURL, $network->cookie_domain );
         }
     }
 
