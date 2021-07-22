@@ -22,5 +22,7 @@ add_filter( 'show_admin_bar', '__return_false' );
 add_filter( 'allowed_redirect_hosts', 'add_redirect_hosts', 10 );
 add_filter( 'option_siteurl', 'forwarded_site_url', 10, 1 );
 add_filter( 'option_home', 'forwarded_site_url', 10, 1 );
+add_filter( 'self_admin_url', 'forwarded_site_url', 10, 1 );
+add_filter( 'get_network', 'forwarded_network_domain', 10, 1 );
 add_filter( 'wp_get_attachment_url', 'forwarded_attachments_url' );
 add_filter( 'status_header', 'no_redirect_guess_404_permalink' );
