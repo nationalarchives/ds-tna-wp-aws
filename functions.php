@@ -2,7 +2,7 @@
 
 function add_redirect_hosts( $hosts ) {
     // read header X-Forwarded-Host and HTTP_X_FORWARDED_HOST
-    $add_host = isset($_SERVER['X-Forwarded-Host']) ? $_SERVER['X-Forwarded-Host'] : isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : '';
+    $add_host = isset($_SERVER['X-Forwarded-Host']) ? $_SERVER['X-Forwarded-Host'] : (isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : '');
     if (! empty($add_host)) {
         $hosts[] = $add_host;
     }
