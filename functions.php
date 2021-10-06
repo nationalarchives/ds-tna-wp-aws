@@ -88,6 +88,25 @@ function tna_aws_admin_page_settings() {
     register_setting( 'tna-aws-group', 'rd_ip_whitelist' );
 }
 
+function get_instance_id() {
+    return exec('TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"` \
+&& curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/instance-id');
+}
+
+function get_ami_id() {
+    return exec('TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"` \
+&& curl -H "X-aws-ec2-metadata-token: $TOKEN" -v http://169.254.169.254/latest/meta-data/ami-id');
+}
+
+function add_instance_id() {
+    if (strpos($_SERVER['SERVER_NAME'], 'dev') !== false || strpos($_SERVER['SERVER_NAME'], 'test') !== false) {
+        echo "<!--
+Instance ID: ".get_instance_id()."
+AMI ID: ".get_ami_id()."
+-->\n";
+    }
+}
+
 function tna_aws_admin_page() {
     ?>
     <style>
