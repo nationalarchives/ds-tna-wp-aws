@@ -100,10 +100,10 @@ function get_ami_id() {
 
 function add_instance_id() {
     if (strpos($_SERVER['SERVER_NAME'], 'dev') !== false || strpos($_SERVER['SERVER_NAME'], 'test') !== false) {
-        echo '<!-- 
-        Instance ID: '.get_instance_id().' 
-        AMI ID: '.get_ami_id().' 
-        -->\n';
+        echo "<!--
+Instance ID: ".get_instance_id()."
+AMI ID: ".get_ami_id()."
+-->\n";
     }
 }
 
