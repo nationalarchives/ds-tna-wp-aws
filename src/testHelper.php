@@ -15,6 +15,6 @@ function is_network_admin() {
 
 function apache_request_headers() {
     return array(
-        'X_HOST_TYPE' => 'private'
+        'X-Host-Type' => 'private'
     );
 }

@@ -13,7 +13,7 @@ function add_redirect_hosts( $hosts ) {
 function forwarded_site_url( $url ) {
     if (is_admin() || $GLOBALS['pagenow'] === 'wp-login.php') {
         $headers = apache_request_headers();
-        if ( defined('EDITOR_SITEURL') && defined('INT_SITEURL') && isset($headers['X_HOST_TYPE']) && $headers['X_HOST_TYPE'] == 'private' ) {
+        if ( defined('EDITOR_SITEURL') && defined('INT_SITEURL') && isset($headers['X-Host-Type']) && $headers['X-Host-Type'] == 'private' ) {
             $url = str_replace( 'http:', 'https:', $url );
             $url = str_replace(INT_SITEURL, EDITOR_SITEURL, $url);
         }
@@ -25,7 +25,7 @@ function forwarded_site_url( $url ) {
 function forwarded_attachments_url($url) {
     if (is_admin()) {
         $headers = apache_request_headers();
-        if( defined('EDITOR_SITEURL') && defined('INT_SITEURL') && isset($headers['X_HOST_TYPE']) && $headers['X_HOST_TYPE'] == 'private' ) {
+        if( defined('EDITOR_SITEURL') && defined('INT_SITEURL') && isset($headers['X-Host-Type']) && $headers['X-Host-Type'] == 'private' ) {
             $url = str_replace( 'http:', 'https:', $url );
             $url = str_replace( INT_SITEURL, EDITOR_SITEURL, $url );
         }
@@ -37,7 +37,7 @@ function forwarded_attachments_url($url) {
 function forwarded_network_domain($network) {
     if (is_admin() && !is_network_admin()) {
         $headers = apache_request_headers();
-        if( defined('EDITOR_SITEURL') && defined('INT_SITEURL') && isset($headers['X_HOST_TYPE']) && $headers['X_HOST_TYPE'] == 'private' ) {
+        if( defined('EDITOR_SITEURL') && defined('INT_SITEURL') && isset($headers['X-Host-Type']) && $headers['X-Host-Type'] == 'private' ) {
             $network->domain = str_replace( INT_SITEURL, EDITOR_SITEURL, $network->domain);
             $network->cookie_domain = str_replace( INT_SITEURL, EDITOR_SITEURL, $network->cookie_domain );
         }
@@ -48,7 +48,7 @@ function forwarded_network_domain($network) {
 
 function redirect_url_filter( $url ) {
     $headers = apache_request_headers();
-    if ( defined('PUBLIC_SITEURL') && isset($headers['X_HOST_TYPE']) && $headers['X_HOST_TYPE'] == 'public' ) {
+    if ( defined('PUBLIC_SITEURL') && isset($headers['X-Host-Type']) && $headers['X-Host-Type'] == 'public' ) {
         global $pre_path;
         $path = '/';
         $home_url = parse_url( home_url() )['host'];
@@ -177,7 +177,7 @@ function tna_aws_admin_page() {
 
 function aws_meta() {
     $headers = apache_request_headers();
-    if (isset($headers['X_HOST_TYPE']) && $headers['X_HOST_TYPE'] == 'private' ) {
+    if (isset($headers['X-Host-Type']) && $headers['X-Host-Type'] == 'private' ) {
         global $pre_path;
         echo '<!-- For debugging URLs
 Public URL: ' . PUBLIC_SITEURL . '
